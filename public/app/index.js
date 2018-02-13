@@ -1,6 +1,6 @@
 (function(){
     //var LOCALURL = "http://localhost:3000/api/"
-    var SERVERURL = "hhttps://authapp-angularjs.herokuapp.com/api/";
+    var SERVERURL = "https://authapp-angularjs.herokuapp.com/api/";
 
 
     var app = angular.module('myAPP',['ui.router']).run(['$rootScope',function($rootScope){

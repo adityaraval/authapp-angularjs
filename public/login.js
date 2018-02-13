@@ -1,6 +1,6 @@
 $("#loginbtn").on('click',function(){
     //var LOCALURL = "http://localhost:3000/api/"
-    var SERVERURL = "hhttps://authapp-angularjs.herokuapp.com/api/";
+    var SERVERURL = "https://authapp-angularjs.herokuapp.com/api/";
     var username =$("#uname").val();
     var password =$("#pwd").val();
     if(username==="" || password===""){
