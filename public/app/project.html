@@ -1,0 +1,18 @@
+<ul class="collection with-header">
+        <li class="collection-header"><h4>Projects</h4></li>
+        <li class="collection-item" ng-repeat="p in projectList">
+          {{p.title}}
+        </li>
+</ul>
+
+<a href="#" ng-click="displayProjectForm()">Add new project</a>
+<form class="" ng-submit="addProject()" ng-show="showProjectForm">
+        <div class="form-group">
+            <label for="first_name">Project Title:</label>
+            <input placeholder="Project Title" type="text" class="validate" ng-model="projectTitle">
+        </div>
+        <div>
+            <input type="submit" value="Add project" class="btn btn-primary btn-xs" />
+            <input type="button" value="Cancel" class="btn btn-default btn-xs" ng-click="hideProjectForm()" />
+        </div>
+</form>

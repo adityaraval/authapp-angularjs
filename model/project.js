@@ -4,7 +4,8 @@ ObjectId = Schema.ObjectId;
 
 let Project = new Schema({
     id:ObjectId,
-    title:String
+    title:String,
+    user_id:{type:ObjectId,ref:'User'}
 });
 
 let ProjectModel = mongoose.model('Project',Project)

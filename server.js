@@ -98,27 +98,6 @@ app.get('/api/todo/:id',(req,res)=>{
     });
 });
 
-//add project
-app.post('/api/project',(req,res)=>{
-    let Project = new ProjectModel({
-        title:req.body.title
-    });
-    Project.save().then((project)=>{
-        res.send({data:[project],success:true});
-    },(error)=>{
-        res.send({data:{},success:false});
-    });
-});
-
-//get all projects apis
-app.get('/api/project',(req,res)=>{
-    ProjectModel.find().then((projects)=>{
-        res.send({data:projects,success:true});
-    },(error)=>{
-        res.send({data:{},success:false});
-    });
-});
-
 //get todo by id 
 app.get('/api/todos',(req,res)=>{
     var p_id = req.query.p_id;
@@ -136,6 +115,9 @@ app.post('/api/register',(req,res)=>{
         fullname:req.body.fullname,
         email:req.body.email,
         password:req.body.password,
+        address:req.body.address,
+        phone:req.body.phone,
+        mobile:req.body.mobile,
         token:null
     });
 
@@ -147,6 +129,7 @@ app.post('/api/register',(req,res)=>{
     });
 });
 
+//Login 
 app.post('/api/login',(req,res)=>{
     let userObj = {email:req.body.email,password:req.body.password};
     UserModel.findOne({email:userObj.email}).exec((err1,user)=>{
@@ -162,10 +145,12 @@ app.post('/api/login',(req,res)=>{
     });
 });
 
+//Get Profile of a loggedin user
 app.get('/api/profile',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
     res.send({data:req.user,success:true});
 });
 
+//Update Profile
 app.patch('/api/profile/:id',passportConfig.authenticate('bearer',{session: false}),(req,res)=>{
     let id = req.params.id;
     let body = _.pick(req.body,['fullname','address','phone','mobile']);
@@ -174,8 +159,29 @@ app.patch('/api/profile/:id',passportConfig.authenticate('bearer',{session: fals
         res.send({data: user, success: true});
     },(error)=>{
         res.send({data:{},success:false});
-    });
+    }); 
+});
 
+//add project for loggedin user
+app.post('/api/project',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    let Project = new ProjectModel({
+        title:req.body.title,
+        user_id:req.user._id
+    });
+    Project.save().then((project)=>{
+        res.send({data:[project],success:true});
+    },(error)=>{
+        res.send({data:{},success:false});
+    });
+});
+
+//get all projects of loggedin user
+app.get('/api/project',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    ProjectModel.find({user_id:req.user._id}).then((projects)=>{
+        res.send({data:projects,success:true});
+    },(error)=>{
+        res.send({data:{},success:false});
+    });
 });
 
 app.listen(PORT,()=>{
