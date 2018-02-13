@@ -1,5 +1,5 @@
 (function(){
-    var LOCALURL = "http://localhost:3000/api/"
+    //var LOCALURL = "http://localhost:3000/api/"
     var SERVERURL = "http://localhost:3000/api/"
 
 
@@ -108,7 +108,7 @@
 
     app.service('profileService', ['$http',function($http){
         this.getUserProfile = function(token){
-            return $http.get(LOCALURL+'profile?access_token='+token).then(function(response){
+            return $http.get(SERVERURL+'profile?access_token='+token).then(function(response){
                 return response.data.data;    
             },function(error){
                 console.log(error);
@@ -116,7 +116,7 @@
         }
 
         this.upodateUserProfile = function(token,id,updateObj){
-            return $http.patch(LOCALURL+'profile/'+id+'?access_token='+token,updateObj).then(function(response){
+            return $http.patch(SERVERURL+'profile/'+id+'?access_token='+token,updateObj).then(function(response){
                 return response.data.data;    
             },function(error){
                 console.log(error);
