@@ -1,0 +1,41 @@
+<ul class="collection with-header">
+        <li class="collection-header"><h4>User Profile</h4></li>
+        <li class="collection-item">
+          <p ng-show="!isEditable"><b>Full Name:</b>  {{UserProfile.fullname}}</p>
+          <div ng-show="isEditable">
+            <label for="first_name">Full Name</label>
+            <input placeholder="Full Name" id="fullname" type="text" class="validate" ng-model="UserProfile.fullname">
+          </div>
+        </li>
+        <li class="collection-item">
+          <p ng-show="!isEditable"><b>Email:</b>  {{UserProfile.email}}</p>
+          <div ng-show="isEditable">
+            <label for="email">Email</label>
+            <input disabled placeholder="Email" id="email" type="text" class="validate" ng-model="UserProfile.email">
+          </div>
+        </li>
+        <li class="collection-item">
+            <p ng-show="!isEditable"><b>Address:</b>  {{UserProfile.address}}</p>
+            <div ng-show="isEditable">
+              <label for="address">Address</label>
+              <input placeholder="Address" id="address" type="text" class="validate" ng-model="UserProfile.address">
+            </div>
+         </li>
+         <li class="collection-item">
+            <p ng-show="!isEditable"><b>Phone:</b>  {{UserProfile.phone}}</p>
+            <div ng-show="isEditable">
+              <label for="phone">Phone</label>
+              <input placeholder="Phone" id="phone" type="text" class="validate" ng-model="UserProfile.phone">
+            </div>
+         </li>
+         <li class="collection-item">
+            <p ng-show="!isEditable"><b>Mobile:</b>  {{UserProfile.mobile}}</p>
+            <div ng-show="isEditable">
+              <label for="mobile">Mobile</label>
+              <input placeholder="Mobile" id="mobile" type="text" class="validate" ng-model="UserProfile.mobile">
+            </div>
+         </li>
+</ul>
+<a class="waves-effect waves-light btn" ng-show="!isEditable" ng-click="makeisEditableTrue()">Edit</a>
+<a class="waves-effect waves-light btn" ng-show="isEditable" ng-click="saveUserProfile(UserProfile._id,UserProfile.fullname,UserProfile.address,UserProfile.phone,UserProfile.mobile)">Save</a>
+<a class="waves-effect waves-light btn" ng-show="isEditable" ng-click="makeisEditableFalse()">Cancel</a>
