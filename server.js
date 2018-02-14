@@ -13,6 +13,7 @@ const {mongoose} = require('./config/mongoose');
 const {TodoModel} = require('./model/todo');
 const {ProjectModel} = require('./model/project');
 const {UserModel} = require('./model/user');
+const {ProjectTodoModel} = require('./model/projectodouser');
 
 //passport config
 const {passportConfig} = require('./config/passport-config');
@@ -31,83 +32,6 @@ app.use(express.static('public'))
 app.get('/',function(req,res){
     res.sendFile('public/login.html', {root: __dirname });
 });
-
-//post todo api
-app.post('/api/todo',(req,res)=>{
-    let Todo = new TodoModel({
-        text:req.body.text,
-        title:req.body.title,
-        completed:req.body.completed,
-        project_id:req.body.project_id
-    });
-    Todo.save().then((todo)=>{
-        res.send({data:[todo],success:true});
-    },(error)=>{
-        res.send({data:{},success:false});
-    });
-});
-
-//get all todo apis
-app.get('/api/todo',(req,res)=>{
-    TodoModel.find({}).populate('project_id').then((todos)=>{
-        res.send({data:todos,success:true});
-    },(error)=>{
-        res.send({data:{},success:false});
-    });
-});
-
-//delete todo by id
-app.delete('/api/todo/:id',(req,res)=>{
-    var id = req.params.id;
-    TodoModel.findByIdAndRemove(id).then((todo)=>{
-        res.send({data:todo,success:true}); 
-    },(error)=>{
-        res.send({data:{},success:false});
-    });
-});
-
-//make todo complete
-app.patch('/api/todo/:id',(req,res)=>{
-    var id = req.params.id;
-    updateObj = {completed:req.body.completed};
-    TodoModel.findByIdAndUpdate(id,{$set:updateObj},{new:true}).then((todo)=>{
-        res.send({data:todo,success:true}); 
-    },(error)=>{
-        res.send({data:{},success:false});
-    });
-});
-
-//update todo
-app.put('/api/todo/:id',(req,res)=>{
-    var id = req.params.id;
-    updateObj = {completed:req.body.completed,text:req.body.text,title:req.body.title};
-    TodoModel.findByIdAndUpdate(id,{$set:updateObj},{new:true}).then((todo)=>{
-        res.send({data:[todo],success:true}); 
-    },(error)=>{
-        res.send({data:{},success:false});
-    });
-});
-
-//get todo by id 
-app.get('/api/todo/:id',(req,res)=>{
-    var id = req.params.id;
-    TodoModel.findById(id).then((todos)=>{
-        res.send({data:[todos],success:true});
-    },(error)=>{
-        res.send({data:{},success:false});
-    });
-});
-
-//get todo by id 
-app.get('/api/todos',(req,res)=>{
-    var p_id = req.query.p_id;
-    TodoModel.find({project_id:p_id}).then((todos)=>{
-        res.send({data:todos,success:true});
-    },(error)=>{
-        res.send({data:{},success:false});
-    });
-});
-
 
 //auth routes for login/signup
 app.post('/api/register',(req,res)=>{
@@ -183,6 +107,93 @@ app.get('/api/project',passportConfig.authenticate('bearer', { session: false })
         res.send({data:{},success:false});
     });
 });
+
+//post todo api
+app.post('/api/todo',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    let Todo = new TodoModel({
+        text:req.body.text,
+        title:req.body.title,
+        completed:req.body.completed,
+        project_id:req.body.project_id
+    });
+    
+    Todo.save((err,todo)=>{
+        if(!err){
+            let projectTodoUser = new ProjectTodoModel({p_id:todo.project_id,t_id:todo._id,u_id:req.user._id});
+            projectTodoUser.save((err,ptu)=>{
+                res.send({data:[todo],success:true});
+            });
+        }
+    });
+});
+
+//get all todos of loggedin user
+app.get('/api/todo',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    ProjectTodoModel.find({u_id:req.user._id},(err,ptu)=>{
+        if(!err){
+           let allTodoIDs = [];
+           ptu.map(item=>{allTodoIDs.push(item.t_id);});
+           TodoModel.find({_id:{$in:allTodoIDs}},(err,todos)=>{
+                if(!err){
+                    res.send({data:todos,success:true});
+                }
+           });
+        }
+    });
+});
+
+//delete todo by id
+app.delete('/api/todo/:id',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    var id = req.params.id;
+    TodoModel.findByIdAndRemove(id).then((todo)=>{
+        res.send({data:todo,success:true}); 
+    },(error)=>{
+        res.send({data:{},success:false});
+    });
+});
+
+//make todo complete
+app.patch('/api/todo/:id',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    var id = req.params.id;
+    updateObj = {completed:req.body.completed};
+    TodoModel.findByIdAndUpdate(id,{$set:updateObj},{new:true}).then((todo)=>{
+        res.send({data:todo,success:true}); 
+    },(error)=>{
+        res.send({data:{},success:false});
+    });
+});
+
+//update todo
+app.put('/api/todo/:id',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    var id = req.params.id;
+    updateObj = {completed:req.body.completed,text:req.body.text,title:req.body.title};
+    TodoModel.findByIdAndUpdate(id,{$set:updateObj},{new:true}).then((todo)=>{
+        res.send({data:[todo],success:true}); 
+    },(error)=>{
+        res.send({data:{},success:false});
+    });
+});
+
+//get todo by id 
+app.get('/api/todo/:id',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    var id = req.params.id;
+    TodoModel.findById(id).then((todos)=>{
+        res.send({data:[todos],success:true});
+    },(error)=>{
+        res.send({data:{},success:false});
+    });
+});
+
+//get todo by id 
+app.get('/api/todos',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    var p_id = req.query.p_id;
+    TodoModel.find({project_id:p_id}).then((todos)=>{
+        res.send({data:todos,success:true});
+    },(error)=>{
+        res.send({data:{},success:false});
+    });
+});
+
 
 app.listen(PORT,()=>{
     console.log('Server is running on port '+PORT);

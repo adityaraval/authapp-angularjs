@@ -1,1 +1,32 @@
-TODO
+<ul class="collection with-header">
+        <li class="collection-header"><h4>Todos</h4></li>
+        <li class="collection-item" ng-repeat="t in todoList">
+            <div>{{t.text}}
+                <a href="#!" ng-click="deleteTodo(t._id)" class="secondary-content aSpacing">
+                    <i class="material-icons">delete</i>
+                </a>
+                <a href="#!" ng-click="stateChanged(t._id,!t.completed)" class="secondary-content aSpacing">
+                        <i class="material-icons" ng-show="t.completed===true">Mark as incomplete</i>
+                        <i class="material-icons" ng-show="t.completed===false">Mark as complete</i>
+                </a>
+            </div>
+        </li>
+</ul>
+
+<a href="#" ng-click="displayTodoForm()">Add new todo</a>
+<form class="" ng-submit="addTodo()" ng-show="showTodoForm">
+        <div class="form-group">
+            <label for="first_name">Todo Text:</label>
+            <input placeholder="Todo Text" type="text" class="validate" ng-model="todoText">
+        </div>
+        <div class="form-group">
+                <label for="first_name">Choose Projects:</label>
+                <select ng-model="selectedProj" style="display:block!important;">
+                        <option ng-repeat="x in projectList" value="{{x._id}}">{{x.title}}</option>
+                </select>
+        </div><br/>
+        <div>
+            <input type="submit" value="Add Todo" class="btn btn-primary btn-xs" />
+            <input type="button" value="Cancel" class="btn btn-default btn-xs" ng-click="hideTodoForm()" />
+        </div>
+</form>
