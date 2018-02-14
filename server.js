@@ -133,7 +133,7 @@ app.get('/api/todo',passportConfig.authenticate('bearer', { session: false }),(r
         if(!err){
            let allTodoIDs = [];
            ptu.map(item=>{allTodoIDs.push(item.t_id);});
-           TodoModel.find({_id:{$in:allTodoIDs}},(err,todos)=>{
+           TodoModel.find({_id:{$in:allTodoIDs}}).populate('project_id').exec((err,todos)=>{
                 if(!err){
                     res.send({data:todos,success:true});
                 }

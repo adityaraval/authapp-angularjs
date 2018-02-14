@@ -9,6 +9,8 @@
                         <i class="material-icons" ng-show="t.completed===true">Mark as incomplete</i>
                         <i class="material-icons" ng-show="t.completed===false">Mark as complete</i>
                 </a>
+                <span class="secondary-content badge blue" style="color:white;">{{t.project_id.title}}</span>
+
             </div>
         </li>
 </ul>
@@ -26,7 +28,7 @@
                 </select>
         </div><br/>
         <div>
-            <input type="submit" value="Add Todo" class="btn btn-primary btn-xs" />
-            <input type="button" value="Cancel" class="btn btn-default btn-xs" ng-click="hideTodoForm()" />
+            <input type="submit" value="Add Todo" class="btn btnColor btn-primary btn-xs" />
+            <input type="button" value="Cancel" class="btn btnColor btn-default btn-xs" ng-click="hideTodoForm()" />
         </div>
 </form>

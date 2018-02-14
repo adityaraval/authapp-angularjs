@@ -8,7 +8,7 @@
     margin-right: 10px;
   }
   #title{
-    background-color: #2bbbad;
+    background-color: #a29bfe;
     color: white;
     padding: 8px;
     margin-top: 0px
@@ -27,7 +27,7 @@
   }
 
   nav{
-    background-color: #2bbbad;
+    background-color: #a29bfe;
   }
 
 
@@ -36,4 +36,12 @@
     display: inline-block;
     text-decoration: none;
     margin: 10px;
+}
+
+.btnColor{
+  background-color: #6c5ce7;
+}
+
+.btn:hover{
+  background-color: #a29bfe;
 }

@@ -135,7 +135,9 @@
             return $http.get(SERVERURL+'profile?access_token='+token).then(function(response){
                 return response.data.data;    
             },function(error){
-                console.log(error);
+                if(error.data==="Unauthorized"){
+                    location.href = '../login.html';
+                }
             });
         }
 
@@ -143,7 +145,9 @@
             return $http.patch(SERVERURL+'profile/'+id+'?access_token='+token,updateObj).then(function(response){
                 return response.data.data;    
             },function(error){
-                console.log(error);
+                if(error.data==="Unauthorized"){
+                    location.href = '../login.html';
+                }
             });
         }
     }]);
@@ -156,7 +160,9 @@
         projectService.getAllProjects($rootScope.token.token).then(function(response){
             $scope.projectList = response
         },function(error){
-
+            if(error.data==="Unauthorized"){
+                location.href = '../login.html';
+            }
         });
     
         $scope.addProject = function(){
@@ -166,7 +172,9 @@
                     $scope.showProjectForm = false;
                     swal("Good job!", "New project is added to the board!", "success");
             },function(error){
-
+                if(error.data==="Unauthorized"){
+                    location.href = '../login.html';
+                }
             });
         }
     
@@ -196,7 +204,7 @@
             return $http.get(SERVERURL+'project?access_token='+token).then((response)=>{
                 return response.data.data;
             },(error)=>{
-                $scope.error = "Error";
+                    console.log(error);
             });
         }
     }]);
@@ -208,13 +216,17 @@
         todoService.getAllTodos($rootScope.token.token).then(function(response){
             $scope.todoList = response
         },function(error){
-
+            if(error.data==="Unauthorized"){
+                location.href = '../login.html';
+            }
         });
 
         projectService.getAllProjects($rootScope.token.token).then(function(response){
             $scope.projectList = response
         },function(error){
-
+            if(error.data==="Unauthorized"){
+                location.href = '../login.html';
+            }
         });
 
         $scope.displayTodoForm = function(){
@@ -233,7 +245,9 @@
                 $scope.todoList = todoList;
                 swal("Good job!", "You deleted the todo!", "success");
             },function(error){
-
+                if(error.data==="Unauthorized"){
+                    location.href = '../login.html';
+                }
             });         
         }
 
@@ -242,9 +256,12 @@
             todoService.addTodo($rootScope.token.token,addObject).then(function(response){
                 $scope.todoList.push(response[0]);
                 $scope.showTodoForm = false;
+                $state.go('todo',$stateParams,{reload:true});
                 swal("Good job!", "New todo is added to the list!", "success");
             },function(error){
-
+                if(error.data==="Unauthorized"){
+                    location.href = '../login.html';
+                }
             });
         }
 
@@ -256,14 +273,16 @@
                     //var updatedList = $scope.todoList;
                     //var foundIndex = updatedList.findIndex(x => x._id == todoId);
                     //$scope.todoList[foundIndex]= response[0]; 
+                    $state.go('todo',$stateParams,{reload:true});
                     swal("Good job!", "You maked the todo as complete!", "success");
-                    $state.go('todo',$stateParams,{reload:true});
                 }else{
-                    swal("Oh!", "You maked the todo as incomplete!", "error");
                     $state.go('todo',$stateParams,{reload:true});
+                    swal("Oh!", "You maked the todo as incomplete!", "error");
                 }
             },function(error){
-
+                if(error.data==="Unauthorized"){
+                    location.href = '../login.html';
+                }
             });
         }
 
@@ -276,7 +295,7 @@
             return $http.get(SERVERURL+'todo?access_token='+token).then((response)=>{
                 return response.data.data;
             },(error)=>{
-                $scope.error = "Error";
+                console.log(error);
             });
         }
 
@@ -292,6 +311,8 @@
         this.removeTodo = function(token,id){
             return $http.delete(SERVERURL+'todo/'+id+'?access_token='+token).then(function(response) {
                 return response.data.data;
+            },function(error){
+                console.log(error);
             });
         }
 
@@ -299,14 +320,11 @@
             return $http.patch(SERVERURL+'todo/'+id+'?access_token='+token, completedTodo).then(function(response){
                 return response.data.data;
             },function(error){
-
+                console.log(error);
             });
         }
 
     }]);
     //todoService ends
-
-
-
 
 })();
