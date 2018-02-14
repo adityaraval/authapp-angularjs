@@ -13,7 +13,11 @@ $("#loginbtn").on('click',function(){
         }, function(auth) {
             if(auth.data.token){
                 localStorage.setItem('token',JSON.stringify(auth.data));
-                location.href = 'app/index.html';
+                var toastHTML = '<span>LoggedIn Successfully!</span><button class="btn-flat toast-action" ng-click="dismissToast()">Dismiss</button>';
+                M.toast({html: toastHTML});
+                setTimeout(function(){
+                    location.href = 'app/index.html';
+                },2000);
             }
         }).fail(function(error) {
             console.log(error);

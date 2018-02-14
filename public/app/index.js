@@ -96,7 +96,9 @@
         profileService.getUserProfile($rootScope.token.token).then(function(response){
             $scope.UserProfile = response;
         },(error)=>{
-            
+            if(error.data==="Unauthorized"){
+                location.href = '../login.html';
+            }
         });
 
         $scope.makeisEditableTrue = function(){
@@ -118,7 +120,9 @@
               
 
             },(error)=>{
-                
+                if(error.data==="Unauthorized"){
+                    location.href = '../login.html';
+                }
             });
         }
 
@@ -196,7 +200,8 @@
                 function(response){
                     return response.data.data;    
                 },function(error){
-                    console.log(error);
+                    //console.log(error);
+                    return error;
                 });
         }
 
@@ -204,7 +209,8 @@
             return $http.get(SERVERURL+'project?access_token='+token).then((response)=>{
                 return response.data.data;
             },(error)=>{
-                    console.log(error);
+                    //console.log(error);
+                    return error;
             });
         }
     }]);
@@ -295,7 +301,8 @@
             return $http.get(SERVERURL+'todo?access_token='+token).then((response)=>{
                 return response.data.data;
             },(error)=>{
-                console.log(error);
+                //console.log(error);
+                return error;
             });
         }
 
@@ -304,7 +311,8 @@
                 function(response){
                     return response.data.data;    
                 },function(error){
-                    console.log(error);
+                    //console.log(error);
+                    return error;
                 });
         }
 
@@ -312,7 +320,8 @@
             return $http.delete(SERVERURL+'todo/'+id+'?access_token='+token).then(function(response) {
                 return response.data.data;
             },function(error){
-                console.log(error);
+                //console.log(error);
+                return error;
             });
         }
 
@@ -320,7 +329,8 @@
             return $http.patch(SERVERURL+'todo/'+id+'?access_token='+token, completedTodo).then(function(response){
                 return response.data.data;
             },function(error){
-                console.log(error);
+                //console.log(error);
+                return error;
             });
         }
 
