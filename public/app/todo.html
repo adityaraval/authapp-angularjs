@@ -1,7 +1,8 @@
 <ul class="collection with-header">
         <li class="collection-header"><h4>Todos</h4></li>
         <li class="collection-item" ng-repeat="t in todoList">
-            <div>{{t.text}}
+            <div>
+                {{t.text}}
                 <a href="#!" ng-click="deleteTodo(t._id)" class="secondary-content aSpacing">
                     <i class="material-icons">delete</i>
                 </a>

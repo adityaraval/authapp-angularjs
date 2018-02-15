@@ -111,12 +111,10 @@
         $scope.saveUserProfile = function(_id,fullname,address,phone,mobile){
             var updateObj = JSON.stringify({fullname:fullname,address:address,phone:phone,mobile:mobile});
 
-            profileService.upodateUserProfile($rootScope.token.token,_id,updateObj).then(function(response){
+            profileService.updateUserProfile($rootScope.token.token,_id,updateObj).then(function(response){
                 $scope.UserProfile = response;
                 $scope.isEditable = false;
-                //toast custom
-                var toastHTML = '<span>Profile Updated Successfully!</span><button class="btn-flat toast-action" ng-click="dismissToast()">Dismiss</button>';
-                M.toast({html: toastHTML});
+                swal("Good job!", "Profile updated successfully!", "success");
             },(error)=>{
                 
             });
@@ -141,9 +139,9 @@
             });
         }
 
-        this.upodateUserProfile = function(token,id,updateObj){
+        this.updateUserProfile = function(token,id,updateObj){
             return $http.patch(SERVERURL+'profile/'+id+'?access_token='+token,updateObj).then(function(response){
-                return response.data.data;    
+                return response.data.data;
             },function(error){
                 if(error.data==="Unauthorized"){
                     location.href = '../login.html';

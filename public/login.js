@@ -16,7 +16,7 @@ $("#loginbtn").on('click',function(){
                 var toastHTML = '<span>LoggedIn Successfully!</span><button class="btn-flat toast-action" ng-click="dismissToast()">Dismiss</button>';
                 M.toast({html: toastHTML});
                 setTimeout(function(){
-                    location.href = 'app/index.html';
+                    location.href = 'app/index.html#!/todo';
                 },2000);
             }
         }).fail(function(error) {

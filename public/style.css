@@ -45,3 +45,12 @@
 .btn:hover{
   background-color: #a29bfe;
 }
+
+
+.completedColor{
+  background-color: #2ecc71;
+}
+
+.incompletedColor{
+  background-color: #e74c3c;
+}

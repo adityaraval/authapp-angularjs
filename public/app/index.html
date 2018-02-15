@@ -22,7 +22,7 @@
     <div ng-app="myAPP">
             <nav ng-controller="navController">
                 <div class="nav-wrapper z-depth-1">
-                    <a ui-sref="home" class="brand-logo">App</a>
+                    <a ui-sref="project" class="brand-logo" style="margin-left:20px;">App</a>
                     <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <!--<li><a ui-sref="home">Home</a></li>
                     <li><a ui-sref="about">About</a></li>-->
@@ -43,4 +43,12 @@
 
     </div>
 <script src="index.js"></script>
+<script>
+    $(document).ready(function(){
+        $('ul li a').click(function(){
+            $('li').removeClass("active");
+            $(this).parent().addClass("active");
+        });
+    });
+</script>
 </body>
