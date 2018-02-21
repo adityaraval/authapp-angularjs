@@ -43,13 +43,18 @@ let User = new Schema({
           type:String,
           required:false,
           minlength:5
-      }
+      },
+    role:{
+        type:String,
+        required:true,
+        enum:['ADMIN','USER']
+    }
 });
 
 User.methods.toJSON = function(){
     var user = this;
     var userObject = user.toObject();
-    return _.pick(userObject,['_id','email','fullname','address','mobile','phone','token']);
+    return _.pick(userObject,['_id','email','fullname','address','mobile','phone','token','role']);
 }
 
 User.methods.generateToken = function(){

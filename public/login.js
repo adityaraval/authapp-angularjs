@@ -11,7 +11,7 @@ $("#loginbtn").on('click',function(){
         email: username,
         password: password
         }, function(auth) {
-            if(auth.data.token){
+            if(auth.data.token && auth.data.role==="USER"){
                 localStorage.setItem('token',JSON.stringify(auth.data));
                 var toastHTML = '<span>LoggedIn Successfully!</span><button class="btn-flat toast-action" ng-click="dismissToast()">Dismiss</button>';
                 M.toast({html: toastHTML});

@@ -15,6 +15,10 @@ const {ProjectModel} = require('./model/project');
 const {UserModel} = require('./model/user');
 const {ProjectTodoModel} = require('./model/projectodouser');
 
+//redis
+var redis = require("redis"),client = redis.createClient();
+
+
 //passport config
 const {passportConfig} = require('./config/passport-config');
 
@@ -26,7 +30,6 @@ app.use(bodyParser.json())
 
 //static folder
 app.use(express.static('public'))
-
 
 //runs angular todo app
 app.get('/',function(req,res){
@@ -60,7 +63,9 @@ app.post('/api/login',(req,res)=>{
         user.comparePassword(userObj.password,(err,isMatch)=>{
             if(isMatch){
                 user.generateToken().then((token)=>{
-                    res.send({data:user,success:true});
+                    var LoggedInUser = user._id;
+                    client.setex(LoggedInUser.toString(),60,JSON.stringify(user));
+                res.send({data:user,success:true});
                 },(error)=>{
                     res.send({data:{},success:false});
                 });
