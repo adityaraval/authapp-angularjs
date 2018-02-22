@@ -54,3 +54,8 @@
 .incompletedColor{
   background-color: #e74c3c;
 }
+
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}

@@ -2,10 +2,38 @@
     //var SERVERURL = "http://localhost:3000/api/"
     var SERVERURL = "https://authapp-angularjs.herokuapp.com/api/";
 
-    var app = angular.module('myAPP',['ui.router']).run(['$rootScope',function($rootScope){
+    var app = angular.module('myAPP',['ui.router','ui-notification']).run(['$rootScope','$timeout','Notification','$state',function($rootScope,$timeout,Notification,$state){
         $rootScope.global = "Global";
+
+        //notification $on
+        $rootScope.$on('sendNotification',function (e,opt) {
+            Notification.primary(opt.message);
+        });
+
         if(localStorage.getItem('token')){
             $rootScope.token = JSON.parse(localStorage.getItem('token'));
+
+            $timeout(function () {
+                var sock = new SockJS('/echo');
+                sock.onopen = function() {
+                    console.log('open');
+                    //sock.send('test');
+                };
+                sock.onmessage = function(e) {
+                    console.log('message', e.data);
+
+                    //broadcast notifiction
+                    $timeout(function () {
+                        $rootScope.$broadcast("sendNotification",{
+                            message:e.data
+                        });
+                    },1000);
+                };
+                sock.onclose = function() {
+                    console.log('close');
+                };
+            },1000);
+
         }else if(!$rootScope.token){
             location.href = '../login.html';
         }
@@ -68,19 +96,16 @@
           }
 
 
-
           $stateProvider.state(helloState);
           $stateProvider.state(aboutState);
           $stateProvider.state(profileState);
           $stateProvider.state(projectState);
           $stateProvider.state(todoState);
-
-
-
     });
 
     //navController starts
-    app.controller('navController',['$scope','$rootScope','$http',function($scope,$rootScope,$http){
+    app.controller('navController',['$scope','$rootScope','$http','Notification',function($scope,$rootScope,$http,Notification){
+        //Notification.primary('Primary notification');
         $scope.logoutAPP = function(){
             localStorage.setItem('token',"");
             location.href = '../login.html';
@@ -90,7 +115,7 @@
 
     //profileController starts
     app.controller('profileController',['$scope','$rootScope','$http','profileService',function($scope,$rootScope,$http,profileService){
-        
+
         $scope.isEditable = false;
         
         profileService.getUserProfile($rootScope.token.token).then(function(response){

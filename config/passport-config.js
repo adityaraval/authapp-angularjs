@@ -14,10 +14,10 @@ passport.use(new BearerStrategy(
             client.get(getLoggedInUser.toString(),(err,result)=>{
                 if(result){
                     var convertedJSON = JSON.parse(result);
-                    console.log("CACHE SET");
-                    console.log(convertedJSON.role,"ROLE");
+                    //console.log("CACHE SET");
+                    //console.log(convertedJSON.role,"ROLE");
                 }else{
-                    console.log("CACHE CLEARED");
+                    //console.log("CACHE CLEARED");
                     var LoggedInUser = user._id;
                     client.setex(LoggedInUser.toString(),60,JSON.stringify(user));
                 }

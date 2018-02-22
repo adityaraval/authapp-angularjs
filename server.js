@@ -18,6 +18,27 @@ const {ProjectTodoModel} = require('./model/projectodouser');
 //redis
 var redis = require("redis"),client = redis.createClient();
 
+var sockjs  = require('sockjs');
+var http    = require('http');
+var sockjs_opts = {sockjs_url: "http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"};
+var sockjs_echo = sockjs.createServer(sockjs_opts);
+var connections = {};
+
+sockjs_echo.on('connection', function(conn) {
+    connections[conn.id] = conn
+    //console.log(conn.id, "==>CONNECTED");
+
+    conn.on('data', function (message) {
+        //console.log(message,"==>MESSAGE==>",conn.id);
+        conn.write(message);
+    });
+
+    conn.on('close', function () {
+        delete connections[conn.id];
+        //console.log(conn.id, "==>CLOSED");
+    });
+
+});
 
 //passport config
 const {passportConfig} = require('./config/passport-config');
@@ -83,8 +104,12 @@ app.get('/api/profile',passportConfig.authenticate('bearer', { session: false })
 app.patch('/api/profile/:id',passportConfig.authenticate('bearer',{session: false}),(req,res)=>{
     let id = req.params.id;
     let body = _.pick(req.body,['fullname','address','phone','mobile']);
-
     UserModel.findByIdAndUpdate(id,{$set:body},{new:true}).then((user)=> {
+        //notify client that profile updated
+        for(var id in connections) {
+            connections[id].write(user.fullname+' updated his profile');
+        }
+        //
         res.send({data: user, success: true});
     },(error)=>{
         res.send({data:{},success:false});
@@ -199,7 +224,9 @@ app.get('/api/todos',passportConfig.authenticate('bearer', { session: false }),(
     });
 });
 
+var server = http.createServer(app);
+sockjs_echo.installHandlers(server, {prefix:'/echo'});
 
-app.listen(PORT,()=>{
+server.listen(PORT,()=>{
     console.log('Server is running on port '+PORT);
 });
