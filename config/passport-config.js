@@ -1,7 +1,7 @@
 const passport = require('passport');
 const BearerStrategy = require('passport-http-bearer').Strategy;
 const {UserModel} = require('../model/user');
-var redis = require("redis"),client = redis.createClient();
+//var redis = require("redis"),client = redis.createClient();
 
 passport.use(new BearerStrategy(
     function(token, done) {
@@ -10,6 +10,7 @@ passport.use(new BearerStrategy(
         if (err) { return done(err); }
         else if (!user) { return done(null, false); }
         else{
+            /*
             var getLoggedInUser = user._id;
             client.get(getLoggedInUser.toString(),(err,result)=>{
                 if(result){
@@ -21,7 +22,7 @@ passport.use(new BearerStrategy(
                     var LoggedInUser = user._id;
                     client.setex(LoggedInUser.toString(),60,JSON.stringify(user));
                 }
-            });
+            });*/
             return done(null, user, { scope: 'all' });
         }
       });

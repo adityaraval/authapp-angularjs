@@ -16,7 +16,7 @@ const {UserModel} = require('./model/user');
 const {ProjectTodoModel} = require('./model/projectodouser');
 
 //redis
-var redis = require("redis"),client = redis.createClient();
+//var redis = require("redis"),client = redis.createClient();
 
 var sockjs  = require('sockjs');
 var http    = require('http');
@@ -95,7 +95,7 @@ app.post('/api/login',(req,res)=>{
                 if(isMatch){
                     user.generateToken().then((token)=>{
                         var LoggedInUser = user._id;
-                        client.setex(LoggedInUser.toString(),60,JSON.stringify(user));
+                        //client.setex(LoggedInUser.toString(),60,JSON.stringify(user));
                         res.send({data:user,success:true});
                     },(error)=>{
                         res.send({data:{},success:false});
