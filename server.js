@@ -29,13 +29,14 @@ sockjs_echo.on('connection', function(conn) {
     //console.log(conn.id, "==>CONNECTED");
 
     conn.on('data', function (message) {
-        //console.log(message,"==>MESSAGE==>",conn.id);
-        conn.write(message);
+        console.log(message,"==>MESSAGE==>",conn.id);
+        connections[conn.id].state = message;
+        //conn.write(message);
     });
 
     conn.on('close', function () {
         delete connections[conn.id];
-        //console.log(conn.id, "==>CLOSED");
+        console.log(conn.id, "==>CLOSED");
     });
 
 });
@@ -63,17 +64,23 @@ app.post('/api/register',(req,res)=>{
         fullname:req.body.fullname,
         email:req.body.email,
         password:req.body.password,
-        address:req.body.address,
-        phone:req.body.phone,
-        mobile:req.body.mobile,
-        token:null
+        address:"",
+        phone:"",
+        mobile:"",
+        token:null,
+        role:"USER"
     });
 
-    User.save().then((user)=>{
-        res.send({data:user,success:true});
-    },(error)=>{
-        console.log(error);
-        res.send({data:{error:error},success:false});
+    UserModel.findOne({email:req.body.email}).exec((err,user)=>{
+        if(user===null){
+            User.save().then((user)=>{
+                res.send({data:user,success:true});
+            },(error)=>{
+                res.send({data:{error:error},success:false});
+            });
+        }else{
+            res.status(422).send({data:{error:"Email Already Exists"},success:false});
+        }
     });
 });
 
@@ -81,17 +88,23 @@ app.post('/api/register',(req,res)=>{
 app.post('/api/login',(req,res)=>{
     let userObj = {email:req.body.email,password:req.body.password};
     UserModel.findOne({email:userObj.email}).exec((err1,user)=>{
-        user.comparePassword(userObj.password,(err,isMatch)=>{
-            if(isMatch){
-                user.generateToken().then((token)=>{
-                    var LoggedInUser = user._id;
-                    client.setex(LoggedInUser.toString(),60,JSON.stringify(user));
-                res.send({data:user,success:true});
-                },(error)=>{
-                    res.send({data:{},success:false});
-                });
-            }
-        });    
+        if(user===null){
+            res.status(422).send({data:{error:"No such user found!"},success:false});
+        }else{
+            user.comparePassword(userObj.password,(err,isMatch)=>{
+                if(isMatch){
+                    user.generateToken().then((token)=>{
+                        var LoggedInUser = user._id;
+                        client.setex(LoggedInUser.toString(),60,JSON.stringify(user));
+                        res.send({data:user,success:true});
+                    },(error)=>{
+                        res.send({data:{},success:false});
+                    });
+                }else{
+                    res.status(422).send({data:{error:"Invalid Password!"},success:false});
+                }
+            });
+        }
     });
 });
 
@@ -107,7 +120,10 @@ app.patch('/api/profile/:id',passportConfig.authenticate('bearer',{session: fals
     UserModel.findByIdAndUpdate(id,{$set:body},{new:true}).then((user)=> {
         //notify client that profile updated
         for(var id in connections) {
-            connections[id].write(user.fullname+' updated his profile');
+            //connections[id].write(user.fullname+' updated his profile');
+            if(connections[id].state==="profile"){
+                connections[id].write(JSON.stringify(user));
+            }
         }
         //
         res.send({data: user, success: true});
@@ -123,6 +139,14 @@ app.post('/api/project',passportConfig.authenticate('bearer', { session: false }
         user_id:req.user._id
     });
     Project.save().then((project)=>{
+        //notify client that profile updated
+        for(var id in connections) {
+            //connections[id].write(user.fullname+' updated his profile');
+            if(connections[id].state==="project"){
+                connections[id].write(JSON.stringify(project));
+            }
+        }
+        //
         res.send({data:[project],success:true});
     },(error)=>{
         res.send({data:{},success:false});

@@ -8,8 +8,8 @@
 
         <!-- Compiled and minified JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
-    
-    
+
+
     <link rel="stylesheet" href="style.css" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" />
@@ -26,7 +26,7 @@
   
               <div class="input-field" id="username">
                 <input  type="text" class="validate" id="uname" required>
-                <label for="username">Username</label>
+                <label for="username">Email</label>
             </div>
             <div class="input-field" id="password">
               <input  type="password" class="validate" id="pwd" required>
@@ -37,14 +37,43 @@
               <label for="remember" id="checkbox" >Remember me</label>
           </p>-->
           <a class="waves-effect waves-light btn btnColor" id="loginbtn">Login</a>
-          
-          </form>
+          <a class="waves-effect waves-light btn btnColor modal-trigger" href="#modal1" id="registerbtn">Register</a>
+
+              </form>
   
           </div>
         </div>
-  
-      </div>
+        <!--modal-->
+        <div id="modal1" class="modal modal-fixed-footer">
+            <form>
+                <div class="modal-header">
+                    <h5 id="title">Register</h5>
+                </div>
+                <div class="modal-content">
+                    <div class="input-field" id="username">
+                        <input  type="text" class="validate" id="uname1" required>
+                        <label for="username">Email</label>
+                    </div>
+                    <div class="input-field" id="fullname">
+                        <input  type="text" class="validate" id="fullname1" required>
+                        <label for="fullname">Fullname</label>
+                    </div>
+                    <div class="input-field" id="password">
+                        <input  type="password" class="validate" id="pwd1" required>
+                        <label for="password">Password</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="waves-effect waves-light btn btnColor" id="registerNow">Register Now</a>
+                </div>
+            </form>
+        </div>
+        <!--modal-ends-->
+    </div>
 
 <script src="login.js"></script>
 </body>
 </html>
+
+
+

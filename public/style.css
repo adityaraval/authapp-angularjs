@@ -7,6 +7,11 @@
     margin-bottom: 10px;
     margin-right: 10px;
   }
+#registerbtn{
+  float: right;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
   #title{
     background-color: #a29bfe;
     color: white;
@@ -18,7 +23,7 @@
     border-radius: 3px;
     box-sizing: border-box;
   }
-  #username,#password{
+  #username,#password,#fullname{
    margin-left: 20px;
    margin-right: 20px;
   }

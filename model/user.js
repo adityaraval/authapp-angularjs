@@ -12,7 +12,7 @@ let User = new Schema({
     fullname:{
         type:String,
         required:true,
-        minlength:6
+        minlength:1
     },
     address:{
         type:String
@@ -37,7 +37,7 @@ let User = new Schema({
       password:{
         type:String,
         required:true,
-        minlength:6
+        minlength:1
       },
       token:{
           type:String,
@@ -89,8 +89,11 @@ User.pre('save',function(next){
 
 User.methods.comparePassword = function(candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-        if (err) return cb(err);
-        cb(null, isMatch);
+        if (err){
+            return cb(err);
+        }else{
+            cb(null, isMatch);
+        }
     });
 };
 
