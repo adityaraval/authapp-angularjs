@@ -71,7 +71,7 @@
                 var sock = new SockJS('/echo',{sessionId:function(){return $state.current.name} });
                 sock.onopen = function () {
                     console.log('open');
-                    sock.send($state.current.name);
+                    sock.send($state.current.name+$rootScope.token._id);
                 };
                 sock.onmessage = function (e) {
                     var parsedObj = JSON.parse(e.data);

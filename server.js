@@ -121,8 +121,9 @@ app.patch('/api/profile/:id',passportConfig.authenticate('bearer',{session: fals
         //notify client that profile updated
         for(var id in connections) {
             //connections[id].write(user.fullname+' updated his profile');
-            if(connections[id].state==="profile"){
+            if(connections[id].state==="profile"+req.user._id){
                 connections[id].write(JSON.stringify(user));
+                break;
             }
         }
         //
@@ -142,8 +143,9 @@ app.post('/api/project',passportConfig.authenticate('bearer', { session: false }
         //notify client that profile updated
         for(var id in connections) {
             //connections[id].write(user.fullname+' updated his profile');
-            if(connections[id].state==="project"){
+            if(connections[id].state==="project"+req.user._id){
                 connections[id].write(JSON.stringify(project));
+                break;
             }
         }
         //
