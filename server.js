@@ -15,6 +15,10 @@ const {ProjectModel} = require('./model/project');
 const {UserModel} = require('./model/user');
 const {ProjectTodoModel} = require('./model/projectodouser');
 
+//stripe
+var stripe = require("stripe")("sk_test_wwV9ktPaQKrk1RYrNamZyjPG");
+
+
 //redis
 //var redis = require("redis"),client = redis.createClient();
 
@@ -68,7 +72,9 @@ app.post('/api/register',(req,res)=>{
         phone:"",
         mobile:"",
         token:null,
-        role:"USER"
+        role:"USER",
+        isPaymentVerified:false,
+        stripeDaTA:{}
     });
 
     UserModel.findOne({email:req.body.email}).exec((err,user)=>{
@@ -131,6 +137,30 @@ app.patch('/api/profile/:id',passportConfig.authenticate('bearer',{session: fals
     },(error)=>{
         res.send({data:{},success:false});
     }); 
+});
+
+//create charge via stripe to make user verified
+app.post('/api/verify/',passportConfig.authenticate('bearer',{session:false}),function (req,res) {
+    let token = req.body.token;
+    // Charge the user's card:
+    stripe.charges.create({
+        amount: 999,
+        currency: "usd",
+        description: req.user._id+"<==>ONE-TIME-CHARGE",
+        source: token.id,
+    }, function(err, charge) {
+        // asynchronously called
+        if(err){
+            return res.send({data:err,success:false});
+        }
+       let body =  {isPaymentVerified:true,stripeData:{charge:charge.id,amount:charge.amount}};
+        UserModel.findByIdAndUpdate(req.user._id,{$set:body},{new:true}).then((user)=>{
+            res.send({data: user, success: true});
+        },(error)=>{
+            res.send({data:{},success:false});
+        });
+    });
+
 });
 
 //add project for loggedin user

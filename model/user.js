@@ -48,13 +48,18 @@ let User = new Schema({
         type:String,
         required:true,
         enum:['ADMIN','USER']
-    }
+    },
+    isPaymentVerified:{
+        type:Boolean,
+        default:false
+    },
+    stripeData:{}
 });
 
 User.methods.toJSON = function(){
     var user = this;
     var userObject = user.toObject();
-    return _.pick(userObject,['_id','email','fullname','address','mobile','phone','token','role']);
+    return _.pick(userObject,['_id','email','fullname','address','mobile','phone','token','role','isPaymentVerified','stripeData']);
 }
 
 User.methods.generateToken = function(){

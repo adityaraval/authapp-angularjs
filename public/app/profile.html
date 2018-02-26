@@ -35,7 +35,39 @@
               <input placeholder="Mobile" id="mobile" type="text" class="validate" ng-model="UserProfile.mobile">
             </div>
          </li>
+    <li class="collection-item">
+        <p ng-show="!isEditable"><b>isPaymentVerified:</b>  {{UserProfile.isPaymentVerified}}</p>
+        <div ng-show="isEditable">
+            <label for="isPaymentVerified">isPaymentVerified</label>
+            <p>{{UserProfile.isPaymentVerified}}</p>
+        </div>
+    </li>
 </ul>
+
+
 <a class="btnColor waves-effect waves-light btn" ng-show="!isEditable" ng-click="makeisEditableTrue()">Edit</a>
 <a class="btnColor waves-effect waves-light btn" ng-show="isEditable" ng-click="saveUserProfile(UserProfile._id,UserProfile.fullname,UserProfile.address,UserProfile.phone,UserProfile.mobile)">Save</a>
 <a class="btnColor waves-effect waves-light btn" ng-show="isEditable" ng-click="makeisEditableFalse()">Cancel</a>
+
+
+<ul class="collection with-header" ng-show="!UserProfile.isPaymentVerified">
+    <li class="collection-header">
+        <h4>Pay now:</h4>
+        <form action="/charge" method="post" id="payment-form">
+            <div class="form-row">
+                <label for="card-element">
+                    Credit or debit card
+                </label>
+                <div id="card-element">
+                    <!-- A Stripe Element will be inserted here. -->
+                </div>
+
+                <!-- Used to display form errors. -->
+                <div id="card-errors" role="alert"></div>
+            </div>
+            <br>
+            <button class="btnColor waves-effect waves-light btn">Pay Now</button>
+        </form>
+    </li>
+</ul>
+
