@@ -15,6 +15,9 @@ const {ProjectModel} = require('./model/project');
 const {UserModel} = require('./model/user');
 const {ProjectTodoModel} = require('./model/projectodouser');
 
+//added mailer service
+//const {sendMailService} = require('./services/mailerService');
+
 //stripe
 var stripe = require("stripe")("sk_test_wwV9ktPaQKrk1RYrNamZyjPG");
 
@@ -133,6 +136,14 @@ app.patch('/api/profile/:id',passportConfig.authenticate('bearer',{session: fals
             }
         }
         //
+        /*
+        var mailOptions = {
+            from: "app@gmail.com",
+            to: req.user.email,
+            subject: 'Regarding Profile Update',
+            text: 'Your Profile has been updated successfully!'
+        };
+        sendMailService( mailOptions,function (err,success) {});*/
         res.send({data: user, success: true});
     },(error)=>{
         res.send({data:{},success:false});
