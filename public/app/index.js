@@ -11,6 +11,12 @@
                     templateUrl: 'profile/profile.html',
                     'controller': 'profileController'
                 }
+            },
+            resolve: {
+                RUserProfile: function (profileService) {
+                    var token = JSON.parse(localStorage.getItem('token'));
+                    return profileService.getUserProfile(token.token);
+                }
             }
         }
 
@@ -22,6 +28,12 @@
                     templateUrl: 'project/project.html',
                     'controller': 'projectController'
                 }
+            },
+            resolve: {
+                RProjectList: function (projectService) {
+                    var token = JSON.parse(localStorage.getItem('token'));
+                    return projectService.getAllProjects(token.token);
+                }
             }
         }
 
@@ -32,6 +44,12 @@
                 'rightSide': {
                     templateUrl: 'todo/todo.html',
                     'controller': 'todoController'
+                }
+            },
+            resolve: {
+                RTodoList: function (todoService) {
+                    var token = JSON.parse(localStorage.getItem('token'));
+                    return todoService.getAllTodos(token.token);
                 }
             }
         }

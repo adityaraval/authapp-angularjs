@@ -4,14 +4,9 @@
     var app = angular.module('myAPP');
 
     //todoController starts
-    app.controller('todoController', ['$scope', '$rootScope', '$http', 'todoService', '$stateParams', '$state', 'projectService', function ($scope, $rootScope, $http, todoService, $stateParams, $state, projectService) {
+    app.controller('todoController', ['$scope', '$rootScope', '$http', 'todoService', '$stateParams', '$state', 'projectService','RTodoList', function ($scope, $rootScope, $http, todoService, $stateParams, $state, projectService,RTodoList) {
         $scope.showTodoForm = false;
-        todoService.getAllTodos($rootScope.token.token).then(function (response) {
-            $scope.todoList = response
-        }, function (error) {
-            //console.log(error);
-
-        });
+        $scope.todoList = RTodoList;
 
         projectService.getAllProjects($rootScope.token.token).then(function (response) {
             $scope.projectList = response

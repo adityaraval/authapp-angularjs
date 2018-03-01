@@ -4,9 +4,10 @@
     var app = angular.module('myAPP');
 
     //profileController starts
-    app.controller('profileController', ['$scope', '$rootScope', '$http','$timeout','profileService', function ($scope, $rootScope, $http,$timeout, profileService) {
+    app.controller('profileController', ['$scope', '$rootScope', '$http','$timeout','profileService','RUserProfile', function ($scope, $rootScope, $http,$timeout, profileService,RUserProfile) {
 
         $scope.isEditable = false;
+        $scope.UserProfile = RUserProfile;
         $scope.stripeToken = "Token";
 
         //notification $on
@@ -15,14 +16,6 @@
             Notification.primary(opt.message);
             $scope.UserProfile = opt.data;
             //}
-        });
-
-        profileService.getUserProfile($rootScope.token.token).then(function (response) {
-            $scope.UserProfile = response;
-        }, (error) => {
-            if (error.data === "Unauthorized") {
-                location.href = '../../login.html';
-            }
         });
 
         $scope.makeisEditableTrue = function () {

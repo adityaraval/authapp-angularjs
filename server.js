@@ -77,7 +77,7 @@ app.post('/api/register',(req,res)=>{
         token:null,
         role:"USER",
         isPaymentVerified:false,
-        stripeDaTA:{}
+        stripeData:{}
     });
 
     UserModel.findOne({email:req.body.email}).exec((err,user)=>{
@@ -157,7 +157,7 @@ app.post('/api/verify/',passportConfig.authenticate('bearer',{session:false}),fu
     stripe.charges.create({
         amount: 999,
         currency: "usd",
-        description: req.user._id+"<==>ONE-TIME-CHARGE",
+        description: req.user._id+"<==>ONE-TIME-CHARGE<==>"+Date.now(),
         source: token.id,
     }, function(err, charge) {
         // asynchronously called
