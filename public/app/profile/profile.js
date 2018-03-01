@@ -4,7 +4,7 @@
     var app = angular.module('myAPP');
 
     //profileController starts
-    app.controller('profileController', ['$scope', '$rootScope', '$http','$timeout','profileService','RUserProfile', function ($scope, $rootScope, $http,$timeout, profileService,RUserProfile) {
+    app.controller('profileController', ['$scope', '$rootScope', '$http','$timeout','profileService','Notification','RUserProfile', function ($scope, $rootScope, $http,$timeout, profileService,Notification,RUserProfile) {
 
         $scope.isEditable = false;
         $scope.UserProfile = RUserProfile;
@@ -14,7 +14,9 @@
         $rootScope.$on('sendNotificationProfile', function (e, opt) {
             //if($rootScope.token._id===opt.data._id){
             Notification.primary(opt.message);
-            $scope.UserProfile = opt.data;
+            $scope.$apply(function () {
+                $scope.UserProfile = opt.data;
+            });
             //}
         });
 

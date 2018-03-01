@@ -101,6 +101,7 @@
         });
 
         //notification $on
+        /*
         $rootScope.$on('sendNotificationProfile', function (e, opt) {
             if($rootScope.token._id===opt.data._id){
                 if($state.current.name==="profile")
@@ -115,6 +116,7 @@
             }
         });
 
+        */
 
 
         if (localStorage.getItem('token')) {

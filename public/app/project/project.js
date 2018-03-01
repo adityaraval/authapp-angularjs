@@ -4,7 +4,7 @@
     var app = angular.module('myAPP');
 
     //projectController starts
-    app.controller('projectController', ['$scope', '$rootScope', '$http', 'projectService','RProjectList', function ($scope, $rootScope, $http, projectService,RProjectList) {
+    app.controller('projectController', ['$scope', '$rootScope', '$http', 'projectService','Notification','RProjectList', function ($scope, $rootScope, $http, projectService,Notification,RProjectList) {
 
         $scope.showProjectForm = false;
         $scope.projectList = RProjectList;
@@ -12,8 +12,11 @@
         //notification $on
         $rootScope.$on('sendNotificationProject', function (e, opt) {
             if($rootScope.token._id===opt.data.user_id){
-                //Notification.primary(opt.message);
-                $scope.projectList.push(opt.data);
+                console.log(true);
+                Notification.primary(opt.message);
+                $scope.$apply(function () {
+                    $scope.projectList.push(opt.data);
+                });
             }
         });
 
