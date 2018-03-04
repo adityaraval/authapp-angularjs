@@ -1,0 +1,14 @@
+<ul class="collection with-header">
+    <li class="collection-header"><h4>Projects</h4></li>
+    <li class="collection-item" ng-repeat="p in $parent.projectList">
+        <div>
+            <a href="" ng-click="filterTodo(p._id)">{{p.title}}</a>
+        </div>
+    </li>
+    <li class="collection-item">
+        <div>
+            <a href="" ng-click="filterTodo('ALL')">All</a>
+        </div>
+    </li>
+    <div ui-view name="rightview"></div>
+</ul>

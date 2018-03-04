@@ -1,35 +1,51 @@
-<ul class="collection with-header">
+<div class="col s3">
+    <div ui-view="projectArea">
+
+    </div>
+</div>
+<div class="col s9">
+    <ul class="collection with-header">
         <li class="collection-header"><h4>Todos</h4></li>
         <li class="collection-item" ng-repeat="t in todoList">
             <div>
-                {{t.text}}
+                <span ng-if="t._id!==editableTodo" ng-class="t.completed?'todoCompleteStyle':'todoInCompleteStyle'">{{t.text}}</span>
+                <span ng-if="t._id===editableTodo"><input class="todoText" type="text" value="t.text" ng-model="t.text" /></span>
                 <a href="#!" ng-click="deleteTodo(t._id)" class="secondary-content aSpacing">
                     <i class="material-icons">delete</i>
                 </a>
                 <a href="#!" ng-click="stateChanged(t._id,!t.completed)" class="secondary-content aSpacing">
-                        <i class="material-icons" ng-show="t.completed===true">Mark as incomplete</i>
-                        <i class="material-icons" ng-show="t.completed===false">Mark as complete</i>
+                    <i class="material-icons" ng-show="t.completed===true">Mark as incomplete</i>
+                    <i class="material-icons" ng-show="t.completed===false">Mark as complete</i>
                 </a>
+                <a href="#!" ng-if="t._id!=editableTodo"ng-click="editTodo(t._id)" class="secondary-content aSpacing">
+                    <i class="material-icons">edit</i>
+                </a>
+                <a href="#!" ng-if="t._id==editableTodo" ng-click="updateTodo(t._id,t.completed,t.text)" class="secondary-content aSpacing">
+                    <i class="material-icons">update</i>
+                </a>
+
                 <span class="secondary-content badge blue" style="color:white;">{{t.project_id.title}}</span>
 
             </div>
         </li>
-</ul>
+    </ul>
 
-<a href="#" ng-click="displayTodoForm()">Add new todo</a>
-<form class="" ng-submit="addTodo()" ng-show="showTodoForm">
+
+    <a ui-sref="todo" ng-click="displayTodoForm()">Add new todo</a>
+    <form class="" ng-submit="addTodo()" ng-show="showTodoForm">
         <div class="form-group">
             <label for="first_name">Todo Text:</label>
             <input placeholder="Todo Text" type="text" class="validate" ng-model="todoText">
         </div>
         <div class="form-group">
-                <label for="first_name">Choose Projects:</label>
-                <select ng-model="selectedProj" style="display:block!important;">
-                        <option ng-repeat="x in projectList" value="{{x._id}}">{{x.title}}</option>
-                </select>
+            <label for="first_name">Choose Projects:</label>
+            <select ng-model="selectedProj" style="display:block!important;">
+                <option ng-repeat="x in projectList" value="{{x._id}}">{{x.title}}</option>
+            </select>
         </div><br/>
         <div>
             <input type="submit" value="Add Todo" class="btn btnColor btn-primary btn-xs" />
             <input type="button" value="Cancel" class="btn btnColor btn-default btn-xs" ng-click="hideTodoForm()" />
         </div>
-</form>
+    </form>
+</div>

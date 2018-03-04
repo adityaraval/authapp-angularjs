@@ -2,12 +2,15 @@
     //var SERVERURL = "http://localhost:3000/api/"
     var SERVERURL = "https://authapp-angularjs.herokuapp.com/api/";
 
-    var app = angular.module('myAPP', ['ui.router', 'ui-notification','angular-loading-bar']).config(function ($stateProvider,cfpLoadingBarProvider) {
+    var app = angular.module('myAPP', ['ui.router', 'ui-notification','angular-loading-bar']).config(function ($stateProvider,$urlRouterProvider,cfpLoadingBarProvider) {
+        $urlRouterProvider.when('/', '/todo');
+        $urlRouterProvider.otherwise('/todo');
+
         var profileState = {
             name: 'profile',
             url: '/profile',
             views: {
-                'rightSide': {
+                'mainSide': {
                     templateUrl: 'profile/profile.html',
                     'controller': 'profileController'
                 }
@@ -24,7 +27,7 @@
             name: 'project',
             url: '/project',
             views: {
-                'rightSide': {
+                'mainSide': {
                     templateUrl: 'project/project.html',
                     'controller': 'projectController'
                 }
@@ -41,9 +44,12 @@
             name: 'todo',
             url: '/todo',
             views: {
-                'rightSide': {
+                'mainSide': {
                     templateUrl: 'todo/todo.html',
                     'controller': 'todoController'
+                },
+                'projectArea@todo':{
+                    templateUrl:'todo/project-list.html',
                 }
             },
             resolve: {

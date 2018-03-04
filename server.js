@@ -264,8 +264,8 @@ app.patch('/api/todo/:id',passportConfig.authenticate('bearer', { session: false
 app.put('/api/todo/:id',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
     var id = req.params.id;
     updateObj = {completed:req.body.completed,text:req.body.text,title:req.body.title};
-    TodoModel.findByIdAndUpdate(id,{$set:updateObj},{new:true}).then((todo)=>{
-        res.send({data:[todo],success:true}); 
+    TodoModel.findByIdAndUpdate(id,{$set:updateObj},{new:true}).populate('project_id').then((todo)=>{
+           res.send({data:[todo],success:true});
     },(error)=>{
         res.send({data:{},success:false});
     });
@@ -284,7 +284,7 @@ app.get('/api/todo/:id',passportConfig.authenticate('bearer', { session: false }
 //get todo by id 
 app.get('/api/todos',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
     var p_id = req.query.p_id;
-    TodoModel.find({project_id:p_id}).then((todos)=>{
+    TodoModel.find({project_id:p_id}).populate('project_id').then((todos)=>{
         res.send({data:todos,success:true});
     },(error)=>{
         res.send({data:{},success:false});

@@ -40,7 +40,7 @@
     line-height: 1em;
     display: inline-block;
     text-decoration: none;
-    margin: 10px;
+    margin: 5px;
 }
 
 .btnColor{
@@ -63,4 +63,19 @@
 .hidden {
   display: none !important;
   visibility: hidden !important;
+}
+
+.todoText{
+  width: 300px!important;
+  margin: 0px!important;
+  height: 25px!important;
+}
+
+.todoCompleteStyle{
+  text-decoration: line-through;
+  color: #2ecc71;
+}
+.todoInCompleteStyle{
+  text-decoration: none;
+  color: #fa755a;
 }
