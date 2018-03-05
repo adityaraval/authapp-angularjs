@@ -177,7 +177,7 @@ app.post('/api/verify/',passportConfig.authenticate('bearer',{session:false}),fu
 //add project for loggedin user
 app.post('/api/project',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
     if(!req.body.title || req.body.title===null || req.body.title===""){
-        res.status(400).send({data:{error:"Bad Request"},success:false});
+        return res.status(400).send({data:{error:"Bad Request"},success:false});
     }
     let Project = new ProjectModel({
         title:req.body.title,
@@ -210,6 +210,9 @@ app.get('/api/project',passportConfig.authenticate('bearer', { session: false })
 
 //post todo api
 app.post('/api/todo',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    if(!req.body.text || !req.body.project_id || req.body.text===null || req.body.project_id===null || req.body.text==="" || req.body.project_id===""){
+        return res.status(400).send({data:{error:"Bad Request"},success:false});
+    }
     let Todo = new TodoModel({
         text:req.body.text,
         title:req.body.title,

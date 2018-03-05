@@ -80,10 +80,14 @@
                 project_id: $scope.selectedProj
             });
             todoService.addTodo($rootScope.token.token, addObject).then(function (response) {
-                $scope.todoList.push(response[0]);
-                $scope.showTodoForm = false;
-                $state.go('todo', $stateParams, {reload: true});
-                swal("Good job!", "New todo is added to the list!", "success");
+                if(typeof response==='undefined'){
+                    swal("Oh!", "Please fill proper data!", "warning");
+                }else{
+                    $scope.todoList.push(response[0]);
+                    $scope.showTodoForm = false;
+                    $state.go('todo', $stateParams, {reload: true});
+                    swal("Good job!", "New todo is added to the list!", "success");
+                }
             }, function (error) {
 
             });

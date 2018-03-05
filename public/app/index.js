@@ -1,6 +1,6 @@
 (function (angular) {
-    //var SERVERURL = "http://localhost:3000/api/"
-    var SERVERURL = "https://authapp-angularjs.herokuapp.com/api/";
+    var SERVERURL = "http://localhost:3000/api/"
+    //var SERVERURL = "https://authapp-angularjs.herokuapp.com/api/";
 
     var app = angular.module('myAPP', ['ui.router', 'ui-notification','angular-loading-bar']).config(function ($stateProvider,$urlRouterProvider,cfpLoadingBarProvider) {
         $urlRouterProvider.when('/', '/todo');
