@@ -1,5 +1,5 @@
-//var SERVERURL = "http://localhost:3000/api/"
-var SERVERURL = "https://authapp-angularjs.herokuapp.com/api/";
+var SERVERURL = "http://localhost:3000/api/"
+//var SERVERURL = "https://authapp-angularjs.herokuapp.com/api/";
 
 $("#loginbtn").on('click',function(){
     var username =$("#uname").val();
