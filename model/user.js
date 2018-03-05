@@ -53,6 +53,7 @@ let User = new Schema({
         type:Boolean,
         default:false
     },
+    stripeCustomerId:String,
     stripeData:{}
 });
 

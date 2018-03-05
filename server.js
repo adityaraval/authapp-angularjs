@@ -82,9 +82,14 @@ app.post('/api/register',(req,res)=>{
 
     UserModel.findOne({email:req.body.email}).exec((err,user)=>{
         if(user===null){
-            User.save().then((user)=>{
-                res.send({data:user,success:true});
-            },(error)=>{
+            stripe.customers.create({email:req.body.email}).then(function (customer) {
+                User.stripeCustomerId = customer.id;
+                User.save().then((user)=>{
+                    res.send({data:user,success:true});
+                },(error)=>{
+                    res.send({data:{error:error},success:false});
+                });
+            },function (error) {
                 res.send({data:{error:error},success:false});
             });
         }else{
@@ -154,24 +159,29 @@ app.patch('/api/profile/:id',passportConfig.authenticate('bearer',{session: fals
 app.post('/api/verify/',passportConfig.authenticate('bearer',{session:false}),function (req,res) {
     let token = req.body.token;
     // Charge the user's card:
-    stripe.charges.create({
-        amount: 999,
-        currency: "usd",
-        description: req.user._id+"<==>ONE-TIME-CHARGE<==>"+Date.now(),
-        source: token.id,
-    }, function(err, charge) {
+    stripe.customers.update(req.user.stripeCustomerId, {
+        source: token.id
+    }, function(err, customer) {
         // asynchronously called
-        if(err){
-            return res.send({data:err,success:false});
-        }
-       let body =  {isPaymentVerified:true,stripeData:{charge:charge.id,amount:charge.amount}};
-        UserModel.findByIdAndUpdate(req.user._id,{$set:body},{new:true}).then((user)=>{
-            res.send({data: user, success: true});
-        },(error)=>{
-            res.send({data:{},success:false});
+        stripe.charges.create({
+            amount: 999,
+            currency: "usd",
+            description: req.user._id+"<==>ONE-TIME-CHARGE<==>"+Date.now(),
+            customer:customer.id
+            //source: token.id,
+        }, function(err, charge) {
+            // asynchronously called
+            if(err){
+                return res.send({data:err,success:false});
+            }
+            let body =  {isPaymentVerified:true,stripeData:{charge:charge.id,amount:charge.amount}};
+            UserModel.findByIdAndUpdate(req.user._id,{$set:body},{new:true}).then((user)=>{
+                res.send({data: user, success: true});
+            },(error)=>{
+                res.send({data:{},success:false});
+            });
         });
     });
-
 });
 
 //add project for loggedin user
