@@ -176,6 +176,9 @@ app.post('/api/verify/',passportConfig.authenticate('bearer',{session:false}),fu
 
 //add project for loggedin user
 app.post('/api/project',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    if(!req.body.title || req.body.title===null || req.body.title===""){
+        res.status(400).send({data:{error:"Bad Request"},success:false});
+    }
     let Project = new ProjectModel({
         title:req.body.title,
         user_id:req.user._id

@@ -24,8 +24,13 @@
             var addObject = JSON.stringify({title: $scope.projectTitle});
             projectService.addProj($rootScope.token.token, addObject).then(function (response) {
                 //$scope.projectList.push(response[0]);
-                $scope.showProjectForm = false;
-                swal("Good job!", "New project is added to the board!", "success");
+                console.log(response)
+                if(typeof response==='undefined'){
+                        swal("Oh!", "Please specify project title!", "warning");
+                }else{
+                    $scope.showProjectForm = false;
+                    swal("Good job!", "New project is added to the board!", "success");
+                }
             }, function (error) {
 
             });

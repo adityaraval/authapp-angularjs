@@ -4,7 +4,10 @@ ObjectId = Schema.ObjectId;
 
 let Project = new Schema({
     id:ObjectId,
-    title:String,
+    title:{
+        type:String,
+        required:true
+    },
     user_id:{type:ObjectId,ref:'User'}
 });
 
