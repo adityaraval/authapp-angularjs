@@ -17,7 +17,6 @@
         
         $scope.generatePDF = function () {
             $http.get(SERVERURL + 'exportPdf?access_token=' + $rootScope.token.token,{responseType: "arraybuffer"}).then((response) => {
-                debugger
                 var downloadLink = document.createElement("a");
                 downloadLink.download = "todoList.pdf";
                 downloadLink.target   = '_blank';
