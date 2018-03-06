@@ -1,10 +1,10 @@
-(function (angular) {
+(function (window,angular) {
     //var SERVERURL = "http://localhost:3000/api/"
     var SERVERURL = "https://authapp-angularjs.herokuapp.com/api/";
     var app = angular.module('myAPP');
 
     //todoController starts
-    app.controller('todoController', ['$scope', '$rootScope', '$http', 'todoService', '$stateParams', '$state', 'projectService','RTodoList', function ($scope, $rootScope, $http, todoService, $stateParams, $state, projectService,RTodoList) {
+    app.controller('todoController', ['$scope','$window', '$rootScope', '$http', 'todoService', '$stateParams', '$state', 'projectService','RTodoList', function ($scope,$window,$rootScope, $http, todoService, $stateParams, $state, projectService,RTodoList) {
         $scope.showTodoForm = false;
         $scope.editableTodo = "";
         $scope.todoList = RTodoList;
@@ -14,6 +14,24 @@
         }, function (error) {
 
         });
+        
+        $scope.generatePDF = function () {
+            $http.get(SERVERURL + 'exportPdf?access_token=' + $rootScope.token.token,{responseType: "arraybuffer"}).then((response) => {
+                debugger
+                var downloadLink = document.createElement("a");
+                downloadLink.download = "todoList.pdf";
+                downloadLink.target   = '_blank';
+                var blob = new Blob([response.data],{type : 'application/pdf'});
+                var url = URL.createObjectURL(blob);
+                downloadLink.href = url;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                setTimeout(function () {
+                    document.body.removeChild(downloadLink);
+                    URL.revokeObjectURL(url);
+                },100);
+            });
+        }
 
         $scope.editTodo = function(todoID){
             $scope.editableTodo = todoID;
@@ -184,4 +202,4 @@
     }]);
     //todoService ends
 
-})(angular);
+})(window,angular);

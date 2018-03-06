@@ -5,7 +5,11 @@ const PORT = process.env.PORT || 3000;
 
 const bodyParser = require('body-parser');
 const _ = require('lodash');
-
+const pdf = require('html-pdf');
+const csv = require('csv');
+const Json2csvParser = require('json2csv').Parser;
+const fs = require('fs');
+const ejs = require("ejs");
 //config for mongoose added
 const {mongoose} = require('./config/mongoose');
 
@@ -59,6 +63,7 @@ app.use(bodyParser.json())
 
 //static folder
 app.use(express.static('public'))
+app.use(express.static('template'))
 
 //runs angular todo app
 app.get('/',function(req,res){
@@ -304,6 +309,47 @@ app.get('/api/todos',passportConfig.authenticate('bearer', { session: false }),(
         res.send({data:todos,success:true});
     },(error)=>{
         res.send({data:{},success:false});
+    });
+});
+
+
+app.get('/api/exportPdf',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    ProjectTodoModel.find({u_id:req.user._id},(err,ptu)=>{
+        if(!err){
+            let allTodoIDs = [];
+            ptu.map(item=>{allTodoIDs.push(item.t_id);});
+            TodoModel.find({_id:{$in:allTodoIDs}}).populate('project_id').exec((err,todos)=>{
+                if(!err){
+                    //create template ejs
+                    ejs.renderFile(__dirname + "/template/template.ejs",{items:todos}, function (err, data) {
+                        //create pdf
+                        pdf.create(data, {width: '350mm', height: '297mm'}).toStream((err, stream) => {
+                            if (err) return res.end(err.stack)
+                            res.setHeader('Content-type','application/pdf');
+                            res.setHeader('Content-Disposition','attachment');
+                            stream.pipe(res);
+                        });
+                    });
+                }
+            });
+        }
+    });
+});
+
+app.get('/api/exportCsv',passportConfig.authenticate('bearer', { session: false }),(req,res)=>{
+    ProjectTodoModel.find({u_id:req.user._id},(err,ptu)=>{
+        if(!err){
+            let allTodoIDs = [];
+            ptu.map(item=>{allTodoIDs.push(item.t_id);});
+            TodoModel.find({_id:{$in:allTodoIDs}}).populate('project_id').exec((err,todos)=>{
+                if(!err){
+                    const fields = ['text', 'completed','project_id.title'];
+                    const json2csvParser = new Json2csvParser({ fields });
+                    const csv = json2csvParser.parse(todos);
+                    console.log(csv);
+                }
+            });
+        }
     });
 });
 
