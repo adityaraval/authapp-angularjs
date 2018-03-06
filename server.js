@@ -343,10 +343,14 @@ app.get('/api/exportCsv',passportConfig.authenticate('bearer', { session: false 
             ptu.map(item=>{allTodoIDs.push(item.t_id);});
             TodoModel.find({_id:{$in:allTodoIDs}}).populate('project_id').exec((err,todos)=>{
                 if(!err){
+                    /*
                     const fields = ['text', 'completed','project_id.title'];
                     const json2csvParser = new Json2csvParser({ fields });
                     const csv = json2csvParser.parse(todos);
-                    console.log(csv);
+                    res.setHeader('Content-type','text/csv');
+                    res.setHeader('Content-disposition', 'attachment; filename=testing.csv');
+                    fs.createReadStream(csv).pipe(res);
+                    */
                 }
             });
         }

@@ -8,13 +8,13 @@
 <div class="container">
     <h2>Todo List Report</h2>
     <p>List of all todos:</p>
-    <table class="table">
-        <thead>
+    <table class="table table-striped">
+        <thead class="info">
         <tr>
             <th>Sr No.</th>
             <th>Project</th>
             <th>Todo</th>
-            <th>Status</th>
+            <th>Completion Status</th>
         </tr>
         </thead>
         <tbody>
@@ -23,7 +23,10 @@
             <td><%= i+1 %></td>
             <td><%= items[i].project_id.title %></td>
             <td><%= items[i].text %></td>
-            <td><%= items[i].completed %></td>
+            <td>
+                <% let checked = items[i].completed ? "checked" : "" %>
+                <input type="checkbox" <%= checked %> >
+            </td>
         </tr>
         <% } %>
         </tbody>
